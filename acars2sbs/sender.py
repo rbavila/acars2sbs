@@ -8,7 +8,7 @@ class Sender(BasicThread):
     def __init__(self, console, outputqueue, host, port):
         super().__init__("sender", console)
         self.outputqueue = outputqueue
-        self.addr = (host, port)
+        self.addr = (socket.gethostbyname(host), port)
         self.socket = None
 
     def _connect(self):

@@ -7,7 +7,7 @@ import time
 class Forwarder(BasicThread):
     def __init__(self, console, fwqueue, host, port):
         super().__init__("forwarder", console)
-        self.addr = (host, port)
+        self.addr = (socket.gethostbyname(host), port)
         self.fwqueue = fwqueue
         self.socket = socket.socket(type=socket.SOCK_DGRAM)
         self.socket.settimeout(5)
