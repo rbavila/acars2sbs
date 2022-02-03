@@ -109,21 +109,14 @@ class ACARSDecoder:
         exp = preamble + r'( {})?$'.format(
             alphanum, # time stamp? (ignored anyway)
         )
-        r = re.compile(exp)
-        fields = ['reg', 'callsign', 'dummy']
-        self.decoders.append((r, fields, 0))
+        fields = ['reg', 'callsign', 'maybe_ts']
+        self.decoders.append((re.compile(exp), fields, 0))
 
         # AC2  PR-MBH ! Q0 5 S30A JJ3291 etc. etc.
-        # ha varias mensagens diferentes que começam com este prefixo
         # a ideia eh que esta regex seja um fallback, pra pegar pelo menos o reg e o callsign
-        # exp = r"^{} ({}) . .. . .... ({})".format(
-        #     preamble,
-        #     reg, # reg
-        #     alphanum, # callsign
-        # )
-        # r = re.compile(exp)
-        # fields = ['reg', 'callsign']
-        # self.decoders.append((r, fields, 0))
+        exp = preamble + r'(.+)'
+        fields = ['reg', 'callsign', 'undecoded']
+        self.decoders.append((re.compile(exp), fields, 0))
 
     def decode(self, msg):
         for (r, fields, flags) in self.decoders:

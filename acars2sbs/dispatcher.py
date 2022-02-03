@@ -45,3 +45,10 @@ class Dispatcher(BasicThread):
             agent.update(data)
 
         self.log("Active flights: {}".format([x.flight.callsign for x in self.active_flights.values()]))
+
+    def _post_run(self):
+        for agent in self.active_flights.values():
+            agent.shutdown()
+        for agent in self.active_flights.values():
+            agent.join()
+        super()._post_run()

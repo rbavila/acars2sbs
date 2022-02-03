@@ -15,7 +15,9 @@ class Decoder(BasicThread):
             data = self.msgdecoder.decode(msg)
             if data:
                 self.dataqueue.put(data)
+                if 'undecoded' in data:
+                    self.log('Undecoded msg: {}'.format(msg))
             else:
-                self.log("Msg não decodificada: {}".format(msg))
+                self.log('Unexpected msg format: {}'.format(msg))
         except queue.Empty:
             pass
