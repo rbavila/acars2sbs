@@ -3,7 +3,7 @@ from acars2sbs.activeflight import ActiveFlightAgent
 import datetime
 import queue
 
-IDLE_TIME = 180
+IDLE_TIME = 300
 
 class Dispatcher(BasicThread):
     def __init__(self, console, dataqueue, outputqueue):
