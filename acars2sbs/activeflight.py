@@ -12,9 +12,9 @@ class ActiveFlight:
         self.reg = reg
         self.callsign = callsign
         self.pos = None
-        self.track = None
+        self.track = 0
         self.alt = None
-        self.gs = None
+        self.speed = None
         self.pos_last_updated = None
         self.speed_last_updated = None
 
@@ -46,6 +46,9 @@ class ActiveFlight:
             now = datetime.datetime.now()
             return (now - self.speed_last_updated).seconds <= DATA_VALIDITY
 
+    def spin(self):
+        self.track = (self.track + 45) % 360
+
 
 class ActiveFlightAgent(BasicThread):
     def __init__(self, name, console, outputqueue, flight_data):
@@ -65,13 +68,19 @@ class ActiveFlightAgent(BasicThread):
         self.log("Flight info updated")
 
     def _run(self):
-        msg = self.sbsencoder.encode_ident(self.flight.callsign)
+        msg = self.sbsencoder.encode_msg1(self.flight.callsign)
         self.outputqueue.put(msg)
         if self.flight.position_is_valid():
-            msg = self.sbsencoder.encode_position(*self.flight.pos, self.flight.alt)
+            gs = self.flight.speed if self.flight.speed_is_valid() else 333
+            msg = self.sbsencoder.encode_msg4(gs, self.flight.track, 0)
+            self.outputqueue.put(msg)
+            self.flight.spin() # :-)
+            msg = self.sbsencoder.encode_msg3(self.flight.alt, *self.flight.pos)
+            self.outputqueue.put(msg)
+            msg = self.sbsencoder.encode_msg5(self.flight.alt)
             self.outputqueue.put(msg)
         if self.flight.speed_is_valid():
-            msg = self.sbsencoder.encode_speed(self.flight.speed)
+            msg = self.sbsencoder.encode_msg4(self.flight.speed, self.flight.track, 0)
             self.outputqueue.put(msg)
         time.sleep(1)
 
