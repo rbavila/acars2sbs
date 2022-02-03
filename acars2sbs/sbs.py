@@ -4,14 +4,14 @@ class SBSEncoder:
     def __init__(self, icao):
         self.icao = icao
 
-    def encode_ident(self, callsign):
+    def encode_msg1(self, callsign):
         m = self._basemsg()
         m[1] = '1'
         m[10] = '@' + callsign
         s = ",".join(m) + '\n'
         return s
 
-    def encode_position(self, lat, lon, alt):
+    def encode_msg3(self, alt, lat, lon):
         m = self._basemsg()
         m[1] = '3'
         m[11] = str(alt)
@@ -21,12 +21,20 @@ class SBSEncoder:
         s = ",".join(m) + '\n'
         return s
 
-    def encode_speed(self, speed):
+    def encode_msg4(self, gs, track, vr):
         m = self._basemsg()
         m[1] = '4'
-        m[12] = str(speed)
-        m[13] = '0' # track
-        m[16] = '0'
+        m[12] = str(gs)
+        m[13] = str(track)
+        m[16] = str(vr)
+        s = ",".join(m) + '\n'
+        return s
+
+    def encode_msg5(self, alt):
+        m = self._basemsg()
+        m[1] = '5'
+        m[11] = str(alt)
+        m[18] = m[20] = m[21] = '0'
         s = ",".join(m) + '\n'
         return s
 
