@@ -16,7 +16,7 @@ class SBSEncoder:
         if 'callsign' in data:
             m = self._basemsg(self.icao, date, time)
             m[1] = '1'
-            m[10] = data['callsign']
+            m[10] = '*' + data['callsign']
             s = ",".join(m) + '\n'
             msgs.append(s)
 
