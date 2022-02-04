@@ -10,11 +10,11 @@ import time
 class Main(BasicThread):
     def __init__(self, console, srchost, srcport, dsthost, dstport, fwhost = None, fwport = None):
         super().__init__("main", console)
-        inputqueue = queue.SimpleQueue()
-        dataqueue = queue.SimpleQueue()
-        outputqueue = queue.SimpleQueue()
+        inputqueue = queue.Queue()
+        dataqueue = queue.Queue()
+        outputqueue = queue.Queue()
         if fwhost:
-            fwqueue = queue.SimpleQueue()
+            fwqueue = queue.Queue()
         else:
             fwqueue = None
         self.threads = []

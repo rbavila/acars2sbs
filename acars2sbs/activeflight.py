@@ -54,7 +54,7 @@ class ActiveFlightAgent(BasicThread):
     def __init__(self, name, console, outputqueue, flight_data):
         super().__init__(name, console)
         self.outputqueue = outputqueue
-        self.dataqueue = queue.SimpleQueue()
+        self.dataqueue = queue.Queue()
         self.last_updated = datetime.datetime.now()
         self.flight = ActiveFlight(flight_data['reg'], flight_data['callsign'])
         self.update(flight_data)
